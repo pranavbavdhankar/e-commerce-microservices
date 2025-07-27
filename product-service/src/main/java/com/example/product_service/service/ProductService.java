@@ -101,6 +101,9 @@ public class ProductService {
 
     }
 
+    public ResponseEntity<Product> updateProduct(Product product){
+        return ResponseEntity.ok(productRepository.save(product));
+    }
     public ResponseEntity<ResponseDto> updateProductImage(String productId, String imageId, MultipartFile file) {
 
         Product product = this.getProductById(productId).getBody();

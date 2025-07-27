@@ -43,6 +43,10 @@ public class Product {
     )
     private List<Category> categories;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Review> reviews;
+
     public Product(ProductDto newProduct) {
         this.name = newProduct.getName();
         this.description = newProduct.getDescription();
