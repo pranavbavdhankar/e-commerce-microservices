@@ -3,11 +3,10 @@ package com.example.product_service.service;
 import com.example.product_service.dto.ProductDto;
 import com.example.product_service.dto.ResponseDto;
 import com.example.product_service.exception.ResourceNotFoundException;
-import com.example.product_service.model.Images;
 import com.example.product_service.model.Product;
+import com.example.product_service.model.ProductImages;
 import com.example.product_service.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,7 +41,7 @@ public class ProductService {
                     categoryService.getCategoriesByIds(newProduct.getCategories()).getBody()
             );
             Product savedProduct = productRepository.save(product);
-            List<Images> images = imageService.saveImages(files, savedProduct);
+            List<ProductImages> images = imageService.saveImages(files, savedProduct);
             product.setImageUrls(images);
             productRepository.save(product);
         }catch (Exception e){
@@ -54,14 +53,15 @@ public class ProductService {
     public ResponseEntity<ResponseDto> addProductImage(String productId, MultipartFile file) {
 
         Product product = getProductById(productId).getBody();
-        Images image = imageService.saveImage(file, product);
+        ProductImages image = imageService.saveImage(file, product);
         if(product.getImageUrls() != null){
             product.getImageUrls().add(image);
         }else{
-            List<Images> list = new ArrayList<>();
+            List<ProductImages> list = new ArrayList<>();
             list.add(image);
             product.setImageUrls(list);
         }
+        product.setUpdateAt(LocalDateTime.now());
         productRepository.save(product);
         return ResponseEntity.ok(
                 new ResponseDto("Image Added Successfully", 200, LocalDateTime.now())
@@ -105,6 +105,7 @@ public class ProductService {
 
         Product product = this.getProductById(productId).getBody();
         imageService.updateImage(product ,imageId, file);
+        product.setUpdateAt(LocalDateTime.now());
         productRepository.save(product);
         return ResponseEntity.ok(
                 new ResponseDto("Image Updated Successfully", 200, LocalDateTime.now())
@@ -118,7 +119,7 @@ public class ProductService {
             imageService.deleteImages(product, product.getImageUrls());
             productRepository.delete(product);
             return new ResponseEntity<>(
-                    new ResponseDto("Product Deleted Successfully", 404, LocalDateTime.now()), HttpStatus.NO_CONTENT
+                    new ResponseDto("Product Deleted Successfully", 200, LocalDateTime.now()), HttpStatus.OK
             );
 
     }
@@ -130,10 +131,12 @@ public class ProductService {
         if(product.getImageUrls() != null && product.getImageUrls().size() == 1){
             product.setImageUrls(null);
         }
+        product.setUpdateAt(LocalDateTime.now());
         productRepository.save(product);
         return ResponseEntity.ok(
                 new ResponseDto("Image Deleted Successfully", 200, LocalDateTime.now())
         );
 
     }
+
 }

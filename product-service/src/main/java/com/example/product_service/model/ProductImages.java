@@ -12,7 +12,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Images {
+public class ProductImages {
     @Id
     String imageId;
     private String url;

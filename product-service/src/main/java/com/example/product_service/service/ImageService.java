@@ -1,9 +1,9 @@
 package com.example.product_service.service;
 
 import com.example.product_service.exception.ResourceNotFoundException;
-import com.example.product_service.model.Images;
 import com.example.product_service.model.Product;
-import com.example.product_service.repository.ImageRepository;
+import com.example.product_service.model.ProductImages;
+import com.example.product_service.repository.ProductImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,11 +18,11 @@ public class ImageService {
 
     private final CloudinaryService cloudinaryService;
 
-    private final ImageRepository imageRepository;
+    private final ProductImageRepository imageRepository;
 
-    public Images saveImage(MultipartFile file, Product product){
+    public ProductImages saveImage(MultipartFile file, Product product){
 
-        Images image = new Images();
+        ProductImages image = new ProductImages();
         image.setImageId(UUID.randomUUID().toString());
         String url = cloudinaryService.uploadFile(file);
         image.setUrl(url);
@@ -31,24 +31,24 @@ public class ImageService {
 
     }
 
-    public List<Images> saveImages(List<MultipartFile> files, Product product){
+    public List<ProductImages> saveImages(List<MultipartFile> files, Product product){
 
         if(files.isEmpty()) return new ArrayList<>();
-        List<Images> res = new ArrayList<>();
+        List<ProductImages> res = new ArrayList<>();
         for(MultipartFile file : files){
-            Images image = saveImage(file, product);
+            ProductImages image = saveImage(file, product);
             res.add(image);
         }
         return res;
 
     }
 
-    public Images getImageById(String imageId){
+    public ProductImages getImageById(String imageId){
         return imageRepository.findById(imageId)
                 .orElseThrow(()-> new ResourceNotFoundException("Image not found"));
     }
 
-    public Images getImageByImageIdAndProductId(String imageId, Product product){
+    public ProductImages getImageByImageIdAndProductId(String imageId, Product product){
 
         return imageRepository.findByImageIdAndProduct(imageId, product)
                 .orElseThrow(()-> new ResourceNotFoundException("Image not found"));
@@ -57,7 +57,7 @@ public class ImageService {
 
     public void updateImage(Product product, String imageId, MultipartFile file){
 
-        Images image = this.getImageByImageIdAndProductId(imageId, product);
+        ProductImages image = this.getImageByImageIdAndProductId(imageId, product);
         cloudinaryService.deleteFile(image.getUrl());
         String url = cloudinaryService.uploadFile(file);
         image.setUrl(url);
@@ -67,7 +67,7 @@ public class ImageService {
 
     public void deleteImage(Product product, String imageId){
 
-        Images image = this.getImageByImageIdAndProductId(imageId, product);
+        ProductImages image = this.getImageByImageIdAndProductId(imageId, product);
         if(image != null){
             cloudinaryService.deleteFile(image.getUrl());
             product.getImageUrls().removeIf(img -> img.getImageId().equals(imageId));
@@ -77,10 +77,10 @@ public class ImageService {
 
     }
 
-    public void deleteImages(Product product, List<Images> imagesList){
+    public void deleteImages(Product product, List<ProductImages> imagesList){
 
         if(imagesList == null) return;
-        for(Images image : imagesList){
+        for(ProductImages image : imagesList){
             deleteImage(product, image.getImageId());
         }
 
