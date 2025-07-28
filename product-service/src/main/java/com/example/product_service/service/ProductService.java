@@ -142,4 +142,10 @@ public class ProductService {
 
     }
 
+    public ResponseEntity<Page<Product>> searchProducts(String query, Pageable pageable) {
+
+        Page<Product> products = productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(query, query, pageable);
+        return ResponseEntity.ok(products);
+
+    }
 }

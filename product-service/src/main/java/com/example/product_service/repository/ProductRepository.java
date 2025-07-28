@@ -19,4 +19,7 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     @Query("SELECT p FROM Product p JOIN p.categories c WHERE c.name = :categoryName")
     Page<Product> getProductByCategoryName(String categoryName, Pageable pageable);
+
+    Page<Product> findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String nameQuery, String descQuery, Pageable pageable);
+
 }

@@ -47,6 +47,10 @@ public class ProductController {
         return productService.getProductsByCategory(categoryName, pageable);
     }
 
+    @GetMapping("get/search")
+    public ResponseEntity<Page<Product>> searchProducts(@RequestParam("query") String query, Pageable pageable){
+        return productService.searchProducts(query, pageable);
+    }
     @PostMapping("update/{productId}")
     public ResponseEntity<Product> updateProduct(@PathVariable String productId, @RequestBody ProductDto product){
         return productService.updateProduct(productId, product);
