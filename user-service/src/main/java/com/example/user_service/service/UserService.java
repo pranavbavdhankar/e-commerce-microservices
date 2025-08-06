@@ -23,7 +23,7 @@ public class UserService {
         return userRepository.save(newUser);
     }
 
-    public UserPrincipal getUserByEmail(String email) {
-        return userRepository.getByEmail(email);
+    public ResponseEntity<UserPrincipal> getUserByEmail(String email) {
+        return ResponseEntity.ok(userRepository.getByEmail(email));
     }
 }

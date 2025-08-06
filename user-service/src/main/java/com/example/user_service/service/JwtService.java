@@ -7,8 +7,10 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class JwtService {
@@ -17,7 +19,7 @@ public class JwtService {
 
     public String generateToken(UserPrincipal userPrincipal) {
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("role", userPrincipal.getRole());
+        claims.put("roles", List.of(userPrincipal.getRole()));
         return createToken(userPrincipal.getEmail(), claims);
     }
 

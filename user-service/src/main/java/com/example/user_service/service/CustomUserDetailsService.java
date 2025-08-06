@@ -19,7 +19,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if(Boolean.FALSE.equals(userService.existsByEmail(email).getBody())){
             throw new UsernameNotFoundException("User not found");
         }
-        UserPrincipal user = userService.getUserByEmail(email);
+        UserPrincipal user = userService.getUserByEmail(email).getBody();
 
         return new CustomUserDetail(user);
     }
