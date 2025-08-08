@@ -13,6 +13,7 @@ public class ProductDto {
 
     private String name;
     private String description;
+    private String userEmail;
     private double price;
     private Map<String, String> specification;
     private List<String> categories;

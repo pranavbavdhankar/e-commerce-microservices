@@ -36,7 +36,6 @@ public class AuthService {
             UserPrincipal newUser = new UserPrincipal(user);
             newUser.setUserId(UUID.randomUUID().toString());
             newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-            newUser.setRole("USER");
             newUser.setActive(true);
 
             UserPrincipal savedUser = userService.registerUser(newUser);

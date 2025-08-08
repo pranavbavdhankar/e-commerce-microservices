@@ -21,10 +21,22 @@ public class CustomRouteLocator {
                 .route("AUTH-SERVICE", r -> r
                                 .path("/api/auth/**")
                                 .uri("lb://USER-SERVICE"))
+
+                .route("PRODUCT-SERVICE", r -> r
+                                .path("/api/product/**", "/api/category/**")
+                                .uri("lb://PRODUCT-SERVICE"))
+
+
+
                 .route("USER-SERVICE", r -> r
                         .path("/api/user/**")
                         .filters(f -> f .filter(new AuthFilter(jwtService)))
                         .uri("lb://USER-SERVICE"))
+
+                .route("ADMIN-PRODUCT-SERVICE", r -> r
+                        .path("/api/product/admin/**", "/api/category/admin/**")
+                        .filters(f -> f .filter(new AuthFilter(jwtService)))
+                        .uri("lb://PRODUCT-SERVICE"))
                 .build();
     }
 

@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenAuthenticationConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -85,9 +86,16 @@ public class ProductService {
 
     }
 
+    public ResponseEntity<Product> getProductByIdAndUserEmail(String productId, String userEmail){
+
+        return ResponseEntity.ok(productRepository.getProductByProductIdAndUserEmail(productId, userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found")));
+
+    }
+
     public ResponseEntity<Product> updateProduct(String productId, ProductDto product) {
 
-        Product existingProduct = this.getProductById(productId).getBody();
+        Product existingProduct = this.getProductByIdAndUserEmail(productId, product.getUserEmail()).getBody();
         existingProduct.setName(product.getName());
         existingProduct.setDescription(product.getDescription());
         existingProduct.setPrice(product.getPrice());
@@ -148,4 +156,9 @@ public class ProductService {
         return ResponseEntity.ok(products);
 
     }
+
+    public ResponseEntity<Page<Product>> getAllProductsByAdmin(String userEmail, Pageable pageable) {
+        return ResponseEntity.ok(productRepository.getAllByUserEmail(userEmail, pageable));
+    }
+
 }

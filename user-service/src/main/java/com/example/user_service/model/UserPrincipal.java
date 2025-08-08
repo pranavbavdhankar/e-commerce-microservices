@@ -1,6 +1,7 @@
 package com.example.user_service.model;
 
 import com.example.user_service.dto.UserDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,6 +20,7 @@ public class UserPrincipal {
     private String fullName;
     @Column(unique = true)
     private String email;
+    @JsonIgnore
     private String password;
     private String role;
     private String address;

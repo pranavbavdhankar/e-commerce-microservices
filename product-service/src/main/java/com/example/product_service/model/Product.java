@@ -23,6 +23,7 @@ public class Product {
 
     private String name;
     private String description;
+    private String userEmail;
     private double price;
     @ElementCollection
     private Map<String, String> specification;
@@ -34,7 +35,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ProductImages> imageUrls;
 
-    @JsonManagedReference
+    @JsonManagedReference(value="product-category")
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "product_category",
@@ -52,5 +53,6 @@ public class Product {
         this.description = newProduct.getDescription();
         this.price = newProduct.getPrice();
         this.specification = newProduct.getSpecification();
+        this.userEmail = newProduct.getUserEmail();
     }
 }

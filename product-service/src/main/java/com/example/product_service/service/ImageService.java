@@ -80,7 +80,8 @@ public class ImageService {
     public void deleteImages(Product product, List<ProductImages> imagesList){
 
         if(imagesList == null) return;
-        for(ProductImages image : imagesList){
+        ArrayList<ProductImages> copy = new ArrayList<>(imagesList);
+        for(ProductImages image : copy){
             deleteImage(product, image.getImageId());
         }
 
